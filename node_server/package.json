@@ -1,0 +1,14 @@
+{
+  "name": "node_server",
+  "version": "1.0.0",
+  "description": "socket Server for multiplaying labyrinthe",
+  "main": "index.js",
+  "scripts": {
+    "test": "test node"
+  },
+  "author": "Thomas Rousse",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.1.0"
+  }
+}
