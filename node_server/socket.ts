@@ -19,10 +19,17 @@ export const NewClient = (client : SocketIO.Socket,
     })
 
     client.on('goOnCase',(data : EventInterfaces.goOnCaseData)=>{
-       /* grid.lock(data.case.x,data.case.y,()=>{
-            io.emit('goOnCase',data);
-        })in progress*/
-       
+       grid.lock(data.caseTo,()=>(
+                new Promise((resolve, reject) => {
+                    playerHandler.mooveTo(client,data.caseFrom,data.caseTo);
+                    resolve();
+                })
+            )
+        )
+    })
+
+    client.on('listening',()=>{
+        playerHandler.sendInitdata(client);
     })
 }
 

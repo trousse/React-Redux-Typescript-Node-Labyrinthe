@@ -5,7 +5,8 @@ export interface testData {
 }
 
 export interface goOnCaseData {
-    case: Icoor;
+    caseFrom: Icoor;
+    caseTo: Icoor;
     playerId: number;      
 }
    
