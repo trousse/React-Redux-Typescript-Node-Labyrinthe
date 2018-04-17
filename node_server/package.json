@@ -4,11 +4,13 @@
   "description": "socket Server for multiplaying labyrinthe",
   "main": "index.js",
   "scripts": {
-    "test": "test node"
+    "test": "test node",
+    "run": "node index.js & cd ../react/my-app/src & npm start "
   },
   "author": "Thomas Rousse",
   "license": "ISC",
   "dependencies": {
+    "forever": "^0.15.3",
     "socket.io": "^2.1.0"
   }
 }
