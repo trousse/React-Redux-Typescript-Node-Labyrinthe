@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "test node",
-    "run": "node index.js & cd ../react/my-app/src & npm start "
+    "run": "node index.js"
   },
   "author": "Thomas Rousse",
   "license": "ISC",
   "dependencies": {
+    "@types/socket.io": "^1.4.33",
     "forever": "^0.15.3",
     "socket.io": "^2.1.0"
   }
