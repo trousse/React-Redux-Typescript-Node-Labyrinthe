@@ -1,9 +1,8 @@
 
-import SocketIO = require('socket.io');
-import {NewClient,DepNewClient} from './socket'
+import {NewClient} from './socket'
 import {lockerGrid} from './labyrintheClasse'
+import {Icoor} from './EventInterfaces'
 import * as conf from './labyrintheConst'
-import { Socket } from 'net';
 
 export class Idgenerator{
     private id:number 
@@ -11,14 +10,23 @@ export class Idgenerator{
     public generetaId = () => this.id++;
 }
 
+export class LabHandlerGenerator{
+    private labs: PlayerHandler[];
+    constructor(){
+        this.labs = [];
+    }
+
+    public generate = (server:SocketIO.Server) =>{
+        let newIDGenetator = new Idgenerator();
+        let newHandler = new PlayerHandler(server.of('/room'+this.labs.length),newIDGenetator);
+        this.labs.push(newHandler);
+    }   
+}
+
 export class PlayerHandler{
 
-    private grid: lockerGrid = new lockerGrid(conf.XSIZE,conf.YSIZE);
+    private lockerGrid: lockerGrid ;
     private newClient = NewClient;
-    private dep: DepNewClient = {
-        grid: this.grid,
-        playerHandler: this
-    }
 
     private players: Player[];
     private io: SocketIO.Server;
@@ -30,23 +38,24 @@ export class PlayerHandler{
     private getPlayerBySocket:(socket:SocketIO.Socket) =>Player =
     (socket:SocketIO.Socket)=>
         ( this.players.find((player)=>
-            (player.getSocket()===<SocketIO.Socket>{...socket})
+            (player.isSameSocket(socket))
         ) 
     )
 
-    constructor(io:SocketIO.Server,idGenerateur:Idgenerator){
+    constructor(io:SocketIO.Namespace,idGenerateur:Idgenerator){
+        this.lockerGrid = new lockerGrid(conf.XSIZE,conf.YSIZE);
+        this.lab = new labyrinthe(conf.XSIZE,conf.YSIZE,io);
+        this.players = [];
         io.on('connection',(client)=>{
-            this.lab = new labyrinthe(conf.XSIZE,conf.YSIZE);
             let newPlayer  = new Player(client,idGenerateur,conf.PV);
             this.players.push(newPlayer);
-            this.newClient(client,this.dep);
+            this.newClient(client,this.lockerGrid,this);
         })
     }
 
     public mooveTo = (client,caseFrom,caseTo)=>{
         let player = this.getPlayerBySocket(client);
-        this.lab.moovePlayer(caseFrom.x,caseFrom.y,caseTo.x,caseTo.y);
-        this.io.emit('gridChange',this.lab.GetGrid());
+        this.lab.moovePlayer(caseFrom,caseTo);
     }
 
     public sendInitdata = (client:SocketIO.Socket) =>{
@@ -71,7 +80,7 @@ export class Player{
     //accesor
     public getDamage = (damage:number)=>this.pv -= damage;
     public getPv: ()=>Number = () => (this.pv);
-    public getSocket: ()=>SocketIO.Socket = () => (<SocketIO.Socket>{...this.socket});
+    public isSameSocket: (extSocket:SocketIO.Socket)=>boolean = (extSocket:SocketIO.Socket) => (extSocket===this.socket);
     public getId: ()=>number = () => (this.id);
 
     //protocole
@@ -83,14 +92,20 @@ export class Player{
 export class labyrinthe{
     private PLAYER = ':)';
     private CORIDOR = '  ';
-
+    private observer:SocketIO.Namespace;
+    private sendGridChange = () => this.observer.emit('gridChange',this.grid);
+    
     private grid :string[][];
 
-    constructor(x:number,y:number){
+    constructor(x:number,y:number,io:SocketIO.Namespace){
+        this.grid = [];
+        this.observer = io;
         for(let i = 0;i<x;i++){
+            let newColone = [];
             for(let j = 0;j<y;j++){
-                this.grid[i][j]=this.CORIDOR;
+                newColone.push(this.CORIDOR);
             }
+            this.grid.push(newColone);
         }
     }
 
@@ -98,16 +113,9 @@ export class labyrinthe{
         this.grid[x][y] = this.PLAYER;
     }
 
-    public moovePlayer = (lx,ly,nx,ny)=>{
-        this.grid[lx][ly] = this.CORIDOR;
-        this.grid[lx][ly] = this.PLAYER;
+    public moovePlayer = (lastPosition:Icoor,nextPosition:Icoor)=>{
+        this.grid[lastPosition.x][lastPosition.y] = this.CORIDOR;
+        this.grid[nextPosition.x][nextPosition.y] = this.PLAYER;
+        this.sendGridChange();
     }
-
-    public GetGrid = () => (
-        this.grid.map((ligne)=>
-            (  ligne.map( (Case)=>
-                ( Case)) 
-            ))
-        )
-
 }

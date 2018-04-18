@@ -1,4 +1,3 @@
-
 export interface TestData {
     foo: string;
 }
@@ -8,8 +7,7 @@ export interface GoOnCaseData {
     caseTo: Icoor;
 }
    
-
-export interface Icoor{
-    x :number,
-    y :number 
+export interface Icoor {
+    x: number;
+    y: number; 
 }

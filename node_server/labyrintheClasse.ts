@@ -1,18 +1,17 @@
 import { S_IFIFO } from "constants";
+import {Icoor} from './EventInterfaces'
 
-export interface Icoor{
-    x :number,
-    y :number 
-}
 
 export class lockerGrid{
     private grid : boolean[][] = [[]];
 
     constructor(xSize:number,ySize:number){
         for(let i = 0;i<xSize;i++){
+            let newColone =[];
             for(let j = 0;j<ySize;j++){
-                this.grid[i][j]=true;
+                newColone.push(true);
             }
+            this.grid.push(newColone);
         }
     }
 

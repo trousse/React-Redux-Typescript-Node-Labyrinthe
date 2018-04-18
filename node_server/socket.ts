@@ -1,5 +1,5 @@
 
-import SocketIO = require('socket.io');
+const SocketIO = require('socket.io');
 import * as EventInterfaces from './EventInterfaces';
 import {lockerGrid} from './labyrintheClasse'
 import {PlayerHandler} from './playerClasse'
@@ -9,16 +9,17 @@ export interface DepNewClient{
     playerHandler: PlayerHandler
 }
 
-export const NewClient = (client : SocketIO.Socket,
-                          dep : DepNewClient ) => {
-    
-    let {grid,playerHandler} = dep;                   
+export const NewClient = (client: SocketIO.Socket,
+                          grid: lockerGrid,
+                          playerHandler: PlayerHandler   ) => {                 
 
     client.on('test',(data)=>{
         console.log(data);
     })
 
-    client.on('goOnCase',(data : EventInterfaces.goOnCaseData)=>{
+    //client.on('wait',()=> console.log('waiting'));
+
+    client.on('goOnCase',(data : EventInterfaces.GoOnCaseData)=>{
        grid.lock(data.caseTo,()=>(
                 new Promise((resolve, reject) => {
                     playerHandler.mooveTo(client,data.caseFrom,data.caseTo);
