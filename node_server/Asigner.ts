@@ -10,8 +10,8 @@ export class Asigner{
     constructor(server:SocketIO.Server){
         this.labHandlerGenerator = new LabHandlerGenerator();
         this.labHandlerGenerator.generate(server);
-        this.counter= 0;
-        this.server= server;
+        this.counter = 0;
+        this.server = server;
     }
 
     public asign:()=>string = ()=>{

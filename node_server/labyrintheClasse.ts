@@ -3,7 +3,7 @@ import {Icoor} from './EventInterfaces'
 
 
 export class lockerGrid{
-    private grid : boolean[][] = [[]];
+    private grid : boolean[][] = [];
 
     constructor(xSize:number,ySize:number){
         for(let i = 0;i<xSize;i++){
@@ -36,7 +36,7 @@ export class lockerGrid{
     }
 
     private deslock(coor:Icoor){
-        let target = this.grid[coor.x][coor.y];
-        if(target===false) target = true;
+
+        if(this.grid[coor.x][coor.y]===false) this.grid[coor.x][coor.y]=true;
     }
 }

@@ -1,4 +1,4 @@
-
+import * as SocketIO from 'socket.io'
 import {NewClient} from './socket'
 import {lockerGrid} from './labyrintheClasse'
 import {Icoor} from './EventInterfaces'

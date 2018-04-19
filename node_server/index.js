@@ -2,13 +2,7 @@
 var server = require('http').createServer();
 var io = require('socket.io')(server);
 const NewClient = require("./socket.js").NewClient;
-import { lockerGrid } from './labyrintheClasse';
 import { Asigner } from './asigner';
-//constante (need to be in conf file)
-const nbPlayerByRoom = 6;
-//declaration
-var compteur = 0;
-const grid = new lockerGrid(5, 5);
 const asigner = new Asigner(io);
 //on client connect => listen event define in Newclient
 //create new client handle by playerHanler

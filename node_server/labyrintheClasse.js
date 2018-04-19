@@ -1,6 +1,6 @@
 export class lockerGrid {
     constructor(xSize, ySize) {
-        this.grid = [[]];
+        this.grid = [];
         for (let i = 0; i < xSize; i++) {
             let newColone = [];
             for (let j = 0; j < ySize; j++) {
@@ -26,8 +26,7 @@ export class lockerGrid {
         }
     }
     deslock(coor) {
-        let target = this.grid[coor.x][coor.y];
-        if (target === false)
-            target = true;
+        if (this.grid[coor.x][coor.y] === false)
+            this.grid[coor.x][coor.y] = true;
     }
 }
