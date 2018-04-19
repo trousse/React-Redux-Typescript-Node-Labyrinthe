@@ -4,7 +4,7 @@ import { Icoor, GoOnCaseData } from './EventInterfaces';
 
 const io = require('socket.io-client'); 
 var socket = io('http://localhost:8080');
-
+/*
 socket.on('asigned', (room: string) => {
   console.log(room);
   socket = io('http://localhost:8080/' + room);
@@ -20,7 +20,7 @@ socket.on('asigned', (room: string) => {
   let data: GoOnCaseData = { caseFrom: last, caseTo: next };
   socket.emit('goOnCase', data);
 });
-
+*/
 class App extends React.Component {
 
   componentWillMount() {
