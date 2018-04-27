@@ -1,9 +1,8 @@
 import * as React from 'react';
 import './App.css';
-import { Icoor, GoOnCaseData } from './EventInterfaces';
+import {  Lab } from './lab';
 
-const io = require('socket.io-client'); 
-var socket = io('http://localhost:8080');
+
 /*
 socket.on('asigned', (room: string) => {
   console.log(room);
@@ -23,19 +22,12 @@ socket.on('asigned', (room: string) => {
 */
 class App extends React.Component {
 
-  componentWillMount() {
-    
-    setTimeout( () => socket.emit('wait') , 4000);
-   
-  }
 
   render() {
     return (
       <div className="App">
         <header className="App-header" />
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <Lab url='http://localhost:8080'/>
       </div>
     );
   }

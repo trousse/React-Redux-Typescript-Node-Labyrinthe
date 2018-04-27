@@ -1,6 +1,7 @@
 import * as IO from 'socket.io-client'
 import {listenServerEvent} from './listenServerEvent'
 import { Icoor } from './EventInterfaces';
+import IlabObserver from './IlabObserver'
 
 export class SocketHandler{
     private socket:SocketIOClient.Socket;
@@ -10,17 +11,22 @@ export class SocketHandler{
         socket.on('asigned', (room: string) => {
             console.log('asigned On room ' + room);
             this.socket = IO(url + '/' + room);
-            observer.onAsigned();
+            socket.emit('up');
+            observer.onAsigned(room);
             listenServerEvent(this.socket,observer);
-        }   
+        })
+        socket.emit('wait');
     }
-    //devra etre fleche h,b,g,d
-    public sendMooveTO = (from:Icoor,to:Icoor) => {
-        let data = { caseFrom: from, caseTo: to };
-        this.socket.emit('goOnCase', data);
+    public sendUp = () => {
+        this.socket.emit('up');
     }
-
-    public sendClickOn = (Case:Icoor) => {
-        this.socket.emit('click',Case);
+    public sendLeft = () => {
+        this.socket.emit('left');
+    }
+    public sendRight = () =>{
+        this.socket.emit('right');
+    }
+    public sendDown = () =>{
+        this.socket.emit('down');
     }
 }

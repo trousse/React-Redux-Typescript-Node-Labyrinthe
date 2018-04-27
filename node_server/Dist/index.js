@@ -1,7 +1,6 @@
 //require("babel-core").transform("code");
 var server = require('http').createServer();
 var io = require('socket.io')(server);
-const NewClient = require("./socket.js").NewClient;
 import { Asigner } from './asigner';
 const asigner = new Asigner(io);
 //on client connect => listen event define in Newclient

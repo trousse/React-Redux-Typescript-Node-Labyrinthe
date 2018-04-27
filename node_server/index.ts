@@ -1,11 +1,8 @@
 //require("babel-core").transform("code");
 var server = require('http').createServer()
 var io = require('socket.io')(server)
-const NewClient = require("./socket.js").NewClient
-import { DepNewClient } from './socket';
-import { PlayerHandler } from './playerClasse';
 import { Asigner } from './asigner';
-
+import * as Iaction from './Interface/IAppActionTypes'
 
 const asigner:Asigner = new Asigner(io);
 

@@ -1,5 +1,7 @@
+import {IcaseProps} from './Props'
+
 interface IlabObserver{
-    onGridChanged: ( grid: CaseProps[][] ) => void;
+    onGridChanged: ( grid: IcaseProps[][] ) => void;
     onAsigned: (room:string)=>void;
 }
 

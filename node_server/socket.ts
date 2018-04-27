@@ -1,41 +1,36 @@
 
 const SocketIO = require('socket.io');
-import * as EventInterfaces from './EventInterfaces';
-import {lockerGrid} from './labyrintheClasse'
-import {PlayerHandler} from './playerClasse'
+import * as redux from 'redux' ;
 import * as conf from './labyrintheConst'
+import { SocketHandler } from './SocketHandler';
+import * as dispatcher from './LabActionCreator'
+import { IAppState, Lab } from './Interface/LabStates';
+import { LabActionTypes } from './Interface/IAppAction';
+import { Idgenerator } from './LabGenerator';
 
-export interface DepNewClient{
-    grid: lockerGrid,
-    playerHandler: PlayerHandler
-}
 
-export const NewClient = (client: SocketIO.Socket,
-                          grid: lockerGrid,
-                          playerHandler: PlayerHandler   ) => {                 
+export const NewClient = (client: SocketIO.Socket,store:redux.Store<Lab,LabActionTypes>,socketHandler:SocketHandler) => {                 
 
-    client.on('test',(data)=>{
-        console.log(data);
+
+    client.on('up',()=>{
+        let player = socketHandler.getPlayerBySocket(client);
+        dispatcher.PlayerMooveUp(player,store);
+    })
+    
+    client.on('down',()=>{
+        let player = socketHandler.getPlayerBySocket(client);
+        dispatcher.PlayerMooveDown(player,store);
+    })
+        
+    client.on('left',()=>{
+        let player = socketHandler.getPlayerBySocket(client);
+        dispatcher.PlayerMooveLeft(player,store);
     })
 
-    //client.on('wait',()=> console.log('waiting'));
-
-    client.on('goOnCase',(data : EventInterfaces.GoOnCaseData)=>{
-        let XinRangeOfGrid = (data.caseFrom.x && data.caseTo.x) < conf.XSIZE;
-        let YinRangeOfGrid = (data.caseFrom.y && data.caseTo.y) < conf.YSIZE;
-        if(XinRangeOfGrid && YinRangeOfGrid){
-            grid.lock(data.caseTo,()=>(
-                    new Promise((resolve, reject) => {
-                        playerHandler.mooveTo(client,data.caseFrom,data.caseTo);
-                        resolve();
-                    })
-                )
-            )
-        }
+    client.on('right',()=>{
+        let player = socketHandler.getPlayerBySocket(client);
+        dispatcher.PlayerMooveRight(player,store);
     })
 
-    client.on('listening',()=>{
-        playerHandler.sendInitdata(client);
-    })
 }
 
